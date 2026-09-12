@@ -1,16 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, User, Eye, EyeOff, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, CheckCircle2, AlertCircle, ArrowRight, WifiOff } from 'lucide-react';
+import { useOnlineStatus } from '@/lib/offline-manager';
 
 export default function LoginPage() {
   const router = useRouter();
+  const isOnline = useOnlineStatus();
+  const [hasPreviousLogin, setHasPreviousLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const logged = localStorage.getItem('postcp_logged_in') === 'true';
+      setHasPreviousLogin(logged);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,6 +154,20 @@ export default function LoginPage() {
                 )}
               </button>
             </div>
+
+            {/* オフライン時のバイパスボタン */}
+            {(!isOnline || hasPreviousLogin) && (
+              <div className="pt-1 text-center">
+                <button
+                  type="button"
+                  onClick={() => router.push('/')}
+                  className="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-98"
+                >
+                  <WifiOff className="w-3.5 h-3.5 text-amber-600" />
+                  <span>端末保存データでアプリを開く</span>
+                </button>
+              </div>
+            )}
           </form>
         </div>
 

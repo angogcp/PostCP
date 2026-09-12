@@ -9,6 +9,9 @@ import CreatePostModal from '@/components/CreatePostModal';
 import { WardId, PostItem } from '@/types/post';
 import staticPostsData from '@/data/posts.json';
 import { FileQuestion, Inbox, Plus } from 'lucide-react';
+import OfflineIndicator from '@/components/OfflineIndicator';
+import OfflineModal from '@/components/OfflineModal';
+import { registerServiceWorker } from '@/lib/offline-manager';
 import {
   getAllCustomImages,
   getAllCustomPosts,
@@ -24,9 +27,11 @@ export default function HomePage() {
   const [customImages, setCustomImages] = useState<Record<string, string>>({});
   const [customPosts, setCustomPosts] = useState<PostItem[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
 
-  // 初回読み込み：カスタム画像と新規登録ポストの取得
+  // 初回マウント：SW登録、カスタム画像と新規登録ポストの取得
   useEffect(() => {
+    registerServiceWorker();
     getAllCustomImages().then(setCustomImages);
     getAllCustomPosts().then(setCustomPosts);
   }, []);
@@ -148,6 +153,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
+      {/* オフライン状態通知バナー */}
+      <OfflineIndicator />
+
       {/* ヘッダー */}
       <Header
         selectedWard={selectedWard}
@@ -157,6 +165,7 @@ export default function HomePage() {
         }}
         counts={counts}
         onOpenCreateModal={() => setIsCreateModalOpen(true)}
+        onOpenOfflineModal={() => setIsOfflineModalOpen(true)}
       />
 
       {/* メインコンテンツ */}
@@ -249,6 +258,13 @@ export default function HomePage() {
         existingPosts={allPosts}
         onClose={() => setIsCreateModalOpen(false)}
         onPostCreated={handlePostCreated}
+      />
+
+      {/* オフライン設定・一括保存モーダル */}
+      <OfflineModal
+        isOpen={isOfflineModalOpen}
+        posts={allPosts}
+        onClose={() => setIsOfflineModalOpen(false)}
       />
     </div>
   );

@@ -12,6 +12,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/icons') ||
     pathname.startsWith('/qr') ||
     pathname.startsWith('/manifest.json') ||
+    pathname === '/sw.js' ||
     pathname === '/login' ||
     pathname === '/favicon.ico' ||
     /\.(jpe?g|png|webp|svg|ico|css|js)$/i.test(pathname)

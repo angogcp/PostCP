@@ -1,14 +1,16 @@
 'use client';
 
-import { LogOut, Plus } from 'lucide-react';
+import { LogOut, Plus, Wifi, WifiOff, HardDrive } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { WardId, WARDS } from '@/types/post';
+import { useOnlineStatus } from '@/lib/offline-manager';
 
 interface HeaderProps {
   selectedWard: WardId;
   onSelectWard: (ward: WardId) => void;
   counts: Record<WardId, number>;
   onOpenCreateModal: () => void;
+  onOpenOfflineModal: () => void;
 }
 
 export default function Header({
@@ -16,8 +18,10 @@ export default function Header({
   onSelectWard,
   counts,
   onOpenCreateModal,
+  onOpenOfflineModal,
 }: HeaderProps) {
   const router = useRouter();
+  const isOnline = useOnlineStatus();
 
   const handleLogout = async () => {
     if (!confirm('ログアウトしますか？')) return;
@@ -34,7 +38,7 @@ export default function Header({
   return (
     <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm safe-top">
       <div className="max-w-xl mx-auto px-4 pt-3 pb-2.5">
-        {/* 最上部：ロゴ・タイトル・新規追加・ログアウト */}
+        {/* 最上部：ロゴ・タイトル・オフライン設定・新規追加・ログアウト */}
         <div className="flex items-center justify-between mb-2.5">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-postal-red text-white flex items-center justify-center font-bold text-lg shadow-sm shadow-red-500/30">
@@ -48,11 +52,34 @@ export default function Header({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            {/* オフライン状態 & 設定ボタン */}
+            <button
+              onClick={onOpenOfflineModal}
+              className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border ${
+                isOnline
+                  ? 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                  : 'bg-amber-50 text-amber-700 border-amber-300 animate-pulse'
+              }`}
+              title="オフライン設定・事前キャッシュ保存"
+            >
+              {isOnline ? (
+                <>
+                  <Wifi className="w-3.5 h-3.5 text-emerald-500" />
+                  <span className="hidden sm:inline text-[11px]">オフライン保存</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="text-[11px]">オフライン</span>
+                </>
+              )}
+            </button>
+
             {/* 新規登録ボタン */}
             <button
               onClick={onOpenCreateModal}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-postal-red hover:bg-postal-darkRed active:scale-95 text-white font-bold text-xs shadow-sm shadow-red-500/20 transition"
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-postal-red hover:bg-postal-darkRed active:scale-95 text-white font-bold text-xs shadow-sm shadow-red-500/20 transition"
               title="新しいポストを登録"
             >
               <Plus className="w-3.5 h-3.5" />
