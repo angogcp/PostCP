@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#ee0000"/>
+  <!-- Post Box Outline -->
+  <rect x="96" y="112" width="320" height="288" rx="32" fill="#ffffff"/>
+  <!-- Mail Slot -->
+  <rect x="144" y="160" width="224" height="28" rx="14" fill="#ee0000"/>
+  <!-- Postal Mark 〒 -->
+  <path d="M192 230 H320 M192 260 H320 M256 260 V350" stroke="#ee0000" stroke-width="28" stroke-linecap="round"/>
+</svg>
