@@ -4,19 +4,19 @@ const COOKIE_NAME = 'postcp_auth_session';
 const SESSION_MAX_AGE = 60 * 60 * 24 * 365; // 1年間有効（現場での再入力ストレスを防止）
 
 export function getCredentials() {
-  const username = process.env.APP_USERNAME || 'admin';
-  const password = process.env.APP_PASSWORD || 'postcp2026';
+  const username = process.env.APP_USERNAME || '';
+  const password = process.env.APP_PASSWORD || '';
   return { username, password };
 }
 
 export function verifyCredentials(user: string, pass: string): boolean {
   const { username, password } = getCredentials();
+  if (!username || !password) return false;
   return user.trim() === username && pass === password;
 }
 
 export async function createSessionCookie(): Promise<string> {
-  // 簡易かつ安全なセッショントークン
-  const secret = process.env.AUTH_SECRET || 'postcp-secret-key-2026-secure';
+  const secret = process.env.AUTH_SECRET || 'postcp-session-secret';
   const data = `authenticated:${Date.now()}:${secret}`;
   
   // base64エンコード
