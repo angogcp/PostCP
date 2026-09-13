@@ -223,11 +223,11 @@
     "id": "3-21",
     "ward": 3,
     "number": 21,
-    "name": "八雲西郵便局",
-    "code": "570421",
-    "address": "守口市 八雲西町 2-1-6",
-    "qrContent": "PST:01;CD1:570421;",
-    "originalFilename": "21. 八雲西郵便局.jpg",
+    "name": "八雲西郵便局前",
+    "code": "570434",
+    "address": "守口市 八雲西町 4-7-3",
+    "qrContent": "PST:01;CD1:570434;",
+    "originalFilename": "21.八雲西郵便局-new.jpg",
     "imagePath": "/qr/3/qr-3-21.jpg"
   },
   {
@@ -260,7 +260,7 @@
     "code": "570424",
     "address": "守口市 八雲東町 2-82-22",
     "qrContent": "PST:01;CD1:570424;",
-    "originalFilename": "24. 八雲東メロディハイム.jpg",
+    "originalFilename": "24.八雲東メロディハイム-new.jpg",
     "imagePath": "/qr/3/qr-3-24.jpg"
   },
   {

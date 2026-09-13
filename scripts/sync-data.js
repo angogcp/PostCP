@@ -36,14 +36,23 @@ wards.forEach((ward) => {
   }
 
   const files = fs.readdirSync(wardSourceDir);
-  const wardPosts = [];
+  // -new ファイルを後に処理（上書き優先）
+  files.sort((a, b) => {
+    const aNew = a.includes('-new');
+    const bNew = b.includes('-new');
+    if (aNew && !bNew) return 1;
+    if (!aNew && bNew) return -1;
+    return a.localeCompare(b);
+  });
+
+  const wardPostsMap = new Map();
 
   files.forEach((file) => {
     // 拡張子のチェック
     const ext = path.extname(file).toLowerCase();
     if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) return;
 
-    // ファイル名から番号と名称を取得 (例: "1. 宮本たばこ店.jpg", "10. メイプル.jpg")
+    // ファイル名から番号と名称を取得 (例: "1. 宮本たばこ店.jpg", "21.八雲西郵便局-new.jpg")
     const baseName = path.basename(file, ext).trim();
     const match = baseName.match(/^(\d+)[\.\s　]*(.*)$/);
 
@@ -55,6 +64,9 @@ wards.forEach((ward) => {
       name = match[2].trim() || `ポスト ${number}`;
     }
 
+    // -new をポスト名から除去して綺麗な表示名にする
+    name = name.replace(/-new$/i, '').trim();
+
     const safeFilename = `qr-${ward.id}-${number}${ext}`;
     const srcFile = path.join(wardSourceDir, file);
     const destFile = path.join(wardTargetDir, safeFilename);
@@ -65,11 +77,11 @@ wards.forEach((ward) => {
     // 既存のJSONからcodeやqrContentがあれば引き継ぐ
     const existingPost = existingPostsMap.get(`${ward.id}-${number}`);
 
-    wardPosts.push({
+    wardPostsMap.set(number, {
       id: `${ward.id}-${number}`,
       ward: ward.id,
       number: number,
-      name: name,
+      name: existingPost?.name || name,
       code: existingPost?.code,
       address: existingPost?.address,
       qrContent: existingPost?.qrContent,
@@ -78,6 +90,7 @@ wards.forEach((ward) => {
     });
   });
 
+  const wardPosts = Array.from(wardPostsMap.values());
   // 番号順にソート
   wardPosts.sort((a, b) => a.number - b.number);
   allPosts.push(...wardPosts);

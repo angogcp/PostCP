@@ -23,7 +23,7 @@ const district3Data = [
   { number: 18, name: "横田酒店", code: "570419", address: "守口市 八雲北町 1-2" },
   { number: 19, name: "八雲北住宅", code: "570420", address: "守口市 八雲北町 3-1" },
   { number: 20, name: "ローソン守口八雲西町三丁目店", code: "570719", address: "守口市 八雲西町 3-1-3" },
-  { number: 21, name: "八雲西郵便局", code: "570421", address: "守口市 八雲西町 2-1-6" },
+  { number: 21, name: "八雲西郵便局前", code: "570434", address: "守口市 八雲西町 4-7-3" },
   { number: 22, name: "淀江町５－７", code: "570422", address: "守口市 淀江町 5-7" },
   { number: 23, name: "八雲東郵便局", code: "570423", address: "守口市 八雲東町 2-78-16" },
   { number: 24, name: "八雲東メロディハイム", code: "570424", address: "守口市 八雲東町 2-82-22" },
