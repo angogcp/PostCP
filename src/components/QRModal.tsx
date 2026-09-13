@@ -15,6 +15,7 @@ import {
   Trash2,
   Sparkles,
   Image as ImageIcon,
+  Clock,
 } from 'lucide-react';
 import { PostItem } from '@/types/post';
 import { saveCustomImage, removeCustomImage } from '@/lib/image-store';
@@ -286,6 +287,35 @@ export default function QRModal({
           </button>
         </div>
       </div>
+
+      {/* 収集予定時刻バナー */}
+      {post.schedule?.weekday && (
+        <div className="w-full max-w-sm mx-auto pt-2 px-4">
+          <div className="bg-slate-800/90 border border-slate-700/80 rounded-xl px-3 py-1.5 flex items-center justify-between text-xs">
+            <span className="flex items-center gap-1 font-bold text-slate-300">
+              <Clock className="w-3.5 h-3.5 text-postal-red" />
+              収集時刻:
+            </span>
+            <div className="flex items-center gap-2 font-mono">
+              {post.schedule.weekday.bin2 && (
+                <span className="text-blue-300 font-bold">
+                  2号 {post.schedule.weekday.bin2}
+                </span>
+              )}
+              {post.schedule.weekday.bin3 && (
+                <span className="text-emerald-300 font-bold">
+                  3号 {post.schedule.weekday.bin3}
+                </span>
+              )}
+              {post.schedule.weekday.special && (
+                <span className="px-1.5 py-0.2 rounded bg-amber-500/30 text-amber-300 font-black border border-amber-500/40">
+                  特便 {post.schedule.weekday.special}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* モード切り替えタブ（高精細デジタルQR vs 現地写真） */}
       <div className="w-full max-w-xs mx-auto pt-2 px-4">

@@ -1,3 +1,16 @@
+export interface PostScheduleTimes {
+  bin2?: string;      // 2号便 (例: "10:10")
+  bin3?: string;      // 3号便 (例: "14:10")
+  special?: string;   // 特便 (例: "17:00")
+}
+
+export interface PostSchedule {
+  weekday?: PostScheduleTimes;
+  holiday?: {
+    [key: string]: string;
+  };
+}
+
 export interface PostItem {
   id: string;
   ward: number;
@@ -8,6 +21,7 @@ export interface PostItem {
   qrContent?: string;
   originalFilename?: string;
   imagePath: string;
+  schedule?: PostSchedule;
 }
 
 export type WardId = 1 | 2 | 3;

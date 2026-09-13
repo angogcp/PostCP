@@ -8,7 +8,13 @@
     "address": "守口市 京阪本通 1-2-10",
     "qrContent": "PST:01;CD1:570401;",
     "originalFilename": "1. 宮本たばこ店.jpg",
-    "imagePath": "/qr/3/qr-3-1.jpg"
+    "imagePath": "/qr/3/qr-3-1.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:10",
+        "bin3": "14:10"
+      }
+    }
   },
   {
     "id": "3-2",
@@ -19,7 +25,13 @@
     "address": "守口市 文園町 10-15",
     "qrContent": "PST:01;CD1:570433;",
     "originalFilename": "2. 関西医大病院（横）.jpg",
-    "imagePath": "/qr/3/qr-3-2.jpg"
+    "imagePath": "/qr/3/qr-3-2.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:13",
+        "bin3": "14:13"
+      }
+    }
   },
   {
     "id": "3-3",
@@ -30,7 +42,13 @@
     "address": "守口市 滝井西町 2-3-22",
     "qrContent": "PST:01;CD1:570405;",
     "originalFilename": "3. 薬局横.jpg",
-    "imagePath": "/qr/3/qr-3-3.jpg"
+    "imagePath": "/qr/3/qr-3-3.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:16",
+        "bin3": "14:16"
+      }
+    }
   },
   {
     "id": "3-4",
@@ -41,7 +59,13 @@
     "address": "守口市 滝井元町 3-1-1",
     "qrContent": "PST:01;CD1:570406;",
     "originalFilename": "4. 滝井元町３－１.jpg",
-    "imagePath": "/qr/3/qr-3-4.jpg"
+    "imagePath": "/qr/3/qr-3-4.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:19",
+        "bin3": "14:19"
+      }
+    }
   },
   {
     "id": "3-5",
@@ -52,7 +76,13 @@
     "address": "守口市 祝町 9-18",
     "qrContent": "PST:01;CD1:570409;",
     "originalFilename": "5. 祝町９－１８.jpg",
-    "imagePath": "/qr/3/qr-3-5.jpg"
+    "imagePath": "/qr/3/qr-3-5.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:22",
+        "bin3": "14:22"
+      }
+    }
   },
   {
     "id": "3-6",
@@ -63,7 +93,14 @@
     "address": "守口市 土居町 9-15",
     "qrContent": "PST:01;CD1:570410;",
     "originalFilename": "6. 守口土居郵便局前.jpg",
-    "imagePath": "/qr/3/qr-3-6.jpg"
+    "imagePath": "/qr/3/qr-3-6.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:25",
+        "bin3": "14:25",
+        "special": "17:00"
+      }
+    }
   },
   {
     "id": "3-7",
@@ -74,7 +111,13 @@
     "address": "守口市 日吉町 1-6",
     "qrContent": "PST:01;CD1:570411;",
     "originalFilename": "7. 日吉町１－６.jpg",
-    "imagePath": "/qr/3/qr-3-7.jpg"
+    "imagePath": "/qr/3/qr-3-7.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:33",
+        "bin3": "14:33"
+      }
+    }
   },
   {
     "id": "3-8",
@@ -85,7 +128,13 @@
     "address": "守口市 京阪本通 2-12",
     "qrContent": "PST:01;CD1:570412;",
     "originalFilename": "8. 京阪本通メロディハイム.jpg",
-    "imagePath": "/qr/3/qr-3-8.jpg"
+    "imagePath": "/qr/3/qr-3-8.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:36",
+        "bin3": "14:36"
+      }
+    }
   },
   {
     "id": "3-9",
@@ -96,7 +145,13 @@
     "address": "守口市 京阪本通 2-15",
     "qrContent": "PST:01;CD1:570413;",
     "originalFilename": "9. 守口警察署１号線向かい.jpg",
-    "imagePath": "/qr/3/qr-3-9.jpg"
+    "imagePath": "/qr/3/qr-3-9.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:39",
+        "bin3": "14:39"
+      }
+    }
   },
   {
     "id": "3-10",
@@ -107,7 +162,13 @@
     "address": "守口市 京阪北本通 2-1",
     "qrContent": "PST:01;CD1:570414;",
     "originalFilename": "10. メイプル.jpg",
-    "imagePath": "/qr/3/qr-3-10.jpg"
+    "imagePath": "/qr/3/qr-3-10.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:42",
+        "bin3": "14:42"
+      }
+    }
   },
   {
     "id": "3-11",
@@ -118,7 +179,13 @@
     "address": "守口市 京阪北本通 3-6",
     "qrContent": "PST:01;CD1:570415;",
     "originalFilename": "11. リバーサイド横.jpg",
-    "imagePath": "/qr/3/qr-3-11.jpg"
+    "imagePath": "/qr/3/qr-3-11.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:45",
+        "bin3": "14:45"
+      }
+    }
   },
   {
     "id": "3-12",
@@ -129,7 +196,14 @@
     "address": "守口市 京阪北本通 1-13",
     "qrContent": "PST:01;CD1:570416;",
     "originalFilename": "12. 北本通郵便局.jpg",
-    "imagePath": "/qr/3/qr-3-12.jpg"
+    "imagePath": "/qr/3/qr-3-12.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:48",
+        "bin3": "14:48",
+        "special": "17:07"
+      }
+    }
   },
   {
     "id": "3-13",
@@ -140,7 +214,13 @@
     "address": "守口市 八雲中町 3-1-35",
     "qrContent": "PST:01;CD1:570417;",
     "originalFilename": "13. 京阪病院.jpg",
-    "imagePath": "/qr/3/qr-3-13.jpg"
+    "imagePath": "/qr/3/qr-3-13.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:56",
+        "bin3": "14:56"
+      }
+    }
   },
   {
     "id": "3-14",
@@ -151,7 +231,13 @@
     "address": "守口市 大日町 2-1",
     "qrContent": "PST:01;CD1:570101;",
     "originalFilename": "14. 国道１号線大日町２.jpg",
-    "imagePath": "/qr/3/qr-3-14.jpg"
+    "imagePath": "/qr/3/qr-3-14.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "10:59",
+        "bin3": "14:59"
+      }
+    }
   },
   {
     "id": "3-15",
@@ -162,7 +248,13 @@
     "address": "守口市 佐太中町 2-24",
     "qrContent": "PST:01;CD1:570116;",
     "originalFilename": "15. 佐太中町２－２４ 駐車場横.jpg",
-    "imagePath": "/qr/3/qr-3-15.jpg"
+    "imagePath": "/qr/3/qr-3-15.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:02",
+        "bin3": "15:02"
+      }
+    }
   },
   {
     "id": "3-16",
@@ -173,7 +265,13 @@
     "address": "守口市 大日東町 28",
     "qrContent": "PST:01;CD1:570117;",
     "originalFilename": "16. 大日東公園横.jpg",
-    "imagePath": "/qr/3/qr-3-16.jpg"
+    "imagePath": "/qr/3/qr-3-16.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:05",
+        "bin3": "15:05"
+      }
+    }
   },
   {
     "id": "3-17",
@@ -184,7 +282,13 @@
     "address": "守口市 八雲西町 1-22-1",
     "qrContent": "PST:01;CD1:570418;",
     "originalFilename": "17. 旧庭窪局.jpg",
-    "imagePath": "/qr/3/qr-3-17.jpg"
+    "imagePath": "/qr/3/qr-3-17.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:08",
+        "bin3": "15:08"
+      }
+    }
   },
   {
     "id": "3-18",
@@ -195,7 +299,13 @@
     "address": "守口市 八雲北町 1-2",
     "qrContent": "PST:01;CD1:570419;",
     "originalFilename": "18. 横田酒店.jpg",
-    "imagePath": "/qr/3/qr-3-18.jpg"
+    "imagePath": "/qr/3/qr-3-18.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:11",
+        "bin3": "15:11"
+      }
+    }
   },
   {
     "id": "3-19",
@@ -206,7 +316,13 @@
     "address": "守口市 八雲北町 3-1",
     "qrContent": "PST:01;CD1:570420;",
     "originalFilename": "19. 八雲北住宅.jpg",
-    "imagePath": "/qr/3/qr-3-19.jpg"
+    "imagePath": "/qr/3/qr-3-19.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:14",
+        "bin3": "15:14"
+      }
+    }
   },
   {
     "id": "3-20",
@@ -217,7 +333,13 @@
     "address": "守口市 八雲西町 3-1-3",
     "qrContent": "PST:01;CD1:570719;",
     "originalFilename": "20. ローソン守口八雲西町三丁目店.jpg",
-    "imagePath": "/qr/3/qr-3-20.jpg"
+    "imagePath": "/qr/3/qr-3-20.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:17",
+        "bin3": "15:17"
+      }
+    }
   },
   {
     "id": "3-21",
@@ -228,7 +350,14 @@
     "address": "守口市 八雲西町 4-7-3",
     "qrContent": "PST:01;CD1:570434;",
     "originalFilename": "21.八雲西郵便局-new.jpg",
-    "imagePath": "/qr/3/qr-3-21.jpg"
+    "imagePath": "/qr/3/qr-3-21.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:25",
+        "bin3": "15:25",
+        "special": "17:14"
+      }
+    }
   },
   {
     "id": "3-22",
@@ -239,7 +368,13 @@
     "address": "守口市 淀江町 5-7",
     "qrContent": "PST:01;CD1:570422;",
     "originalFilename": "22. 淀江町５－７.jpg",
-    "imagePath": "/qr/3/qr-3-22.jpg"
+    "imagePath": "/qr/3/qr-3-22.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:33",
+        "bin3": "15:33"
+      }
+    }
   },
   {
     "id": "3-23",
@@ -250,7 +385,14 @@
     "address": "守口市 八雲東町 2-78-16",
     "qrContent": "PST:01;CD1:570423;",
     "originalFilename": "23. 八雲東郵便局.jpg",
-    "imagePath": "/qr/3/qr-3-23.jpg"
+    "imagePath": "/qr/3/qr-3-23.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:36",
+        "bin3": "15:36",
+        "special": "17:21"
+      }
+    }
   },
   {
     "id": "3-24",
@@ -261,7 +403,13 @@
     "address": "守口市 八雲東町 2-82-22",
     "qrContent": "PST:01;CD1:570424;",
     "originalFilename": "24.八雲東メロディハイム-new.jpg",
-    "imagePath": "/qr/3/qr-3-24.jpg"
+    "imagePath": "/qr/3/qr-3-24.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:44",
+        "bin3": "15:44"
+      }
+    }
   },
   {
     "id": "3-25",
@@ -272,7 +420,13 @@
     "address": "守口市 八雲東町 2-1",
     "qrContent": "PST:01;CD1:570426;",
     "originalFilename": "25. 関西電力前.jpg",
-    "imagePath": "/qr/3/qr-3-25.jpg"
+    "imagePath": "/qr/3/qr-3-25.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "11:57",
+        "bin3": "15:57"
+      }
+    }
   },
   {
     "id": "3-26",
@@ -283,7 +437,13 @@
     "address": "守口市 大日東町 15-4",
     "qrContent": "PST:01;CD1:570427;",
     "originalFilename": "26. 柳田商店.jpg",
-    "imagePath": "/qr/3/qr-3-26.jpg"
+    "imagePath": "/qr/3/qr-3-26.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "12:00",
+        "bin3": "16:00"
+      }
+    }
   },
   {
     "id": "3-27",
@@ -294,7 +454,13 @@
     "address": "守口市 大日町 1-8",
     "qrContent": "PST:01;CD1:570428;",
     "originalFilename": "27. 盛泉寺.jpg",
-    "imagePath": "/qr/3/qr-3-27.jpg"
+    "imagePath": "/qr/3/qr-3-27.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "12:03",
+        "bin3": "16:03"
+      }
+    }
   },
   {
     "id": "3-28",
@@ -305,6 +471,12 @@
     "address": "守口市 大日東町 1-1",
     "qrContent": "PST:01;CD1:570429;",
     "originalFilename": "28. ＭＩＤビル.jpg",
-    "imagePath": "/qr/3/qr-3-28.jpg"
+    "imagePath": "/qr/3/qr-3-28.jpg",
+    "schedule": {
+      "weekday": {
+        "bin2": "12:06",
+        "bin3": "16:06"
+      }
+    }
   }
 ]

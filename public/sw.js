@@ -1,5 +1,5 @@
 // PostCP Service Worker - オフライン対応キャッシュ
-const CACHE_NAME = 'postcp-cache-v2';
+const CACHE_NAME = 'postcp-cache-v3';
 
 // 必須キャッシュリスト
 const STATIC_ASSETS = [
@@ -7,6 +7,10 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/icons/icon.svg',
   '/favicon.ico',
+  '/images/routes/weekday_bin2_3ku.jpg',
+  '/images/routes/weekday_bin3_3ku.jpg',
+  '/images/routes/weekday_special_3ku.jpg',
+  '/images/routes/weekday_all_3ku.jpg',
 ];
 
 // インストール時
@@ -60,8 +64,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // QR画像リクエストは Cache First
-  if (url.pathname.startsWith('/qr/')) {
+  // QR画像・ルート便画像リクエストは Cache First
+  if (url.pathname.startsWith('/qr/') || url.pathname.startsWith('/images/')) {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match(request).then((cachedResponse) => {

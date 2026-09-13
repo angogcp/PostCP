@@ -6,6 +6,9 @@ import SearchBar from '@/components/SearchBar';
 import PostCard from '@/components/PostCard';
 import QRModal from '@/components/QRModal';
 import CreatePostModal from '@/components/CreatePostModal';
+import ScheduleFilterBar, { ShiftFilter } from '@/components/ScheduleFilterBar';
+import RouteScheduleModal from '@/components/RouteScheduleModal';
+import RouteQRModal from '@/components/RouteQRModal';
 import { WardId, PostItem } from '@/types/post';
 import staticPostsData from '@/data/posts.json';
 import { FileQuestion, Inbox, Plus } from 'lucide-react';
@@ -23,11 +26,14 @@ export default function HomePage() {
   // 初期区はデータが存在する3区を選択
   const [selectedWard, setSelectedWard] = useState<WardId>(3);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentShift, setCurrentShift] = useState<ShiftFilter>('all');
   const [activeModalPost, setActiveModalPost] = useState<PostItem | null>(null);
   const [customImages, setCustomImages] = useState<Record<string, string>>({});
   const [customPosts, setCustomPosts] = useState<PostItem[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [activeRouteShiftId, setActiveRouteShiftId] = useState<string | null>(null);
 
   // 初回マウント：SW登録、カスタム画像と新規登録ポストの取得
   useEffect(() => {
@@ -120,10 +126,28 @@ export default function HomePage() {
       .sort((a, b) => a.number - b.number);
   }, [allPosts, selectedWard]);
 
-  // 検索クエリによる絞り込み（全角半角、ひらがな・カタカナ両対応）
+  // スケジュールデータがあるか
+  const hasScheduleData = useMemo(() => {
+    return currentWardPosts.some((p) => p.schedule?.weekday);
+  }, [currentWardPosts]);
+
+  // 便（Shift）および検索クエリによる絞り込み
   const filteredPosts = useMemo(() => {
+    // 1. 便による絞り込み
+    let list = currentWardPosts;
+    if (currentShift === 'special') {
+      list = list.filter((p) => p.schedule?.weekday?.special);
+    } else if (currentShift === 'bin2') {
+      // 2号便（全件存在する場合は2号便時刻があるもの）
+      list = list.filter((p) => p.schedule?.weekday?.bin2 || !p.schedule);
+    } else if (currentShift === 'bin3') {
+      // 3号便（3号便時刻があるもの）
+      list = list.filter((p) => p.schedule?.weekday?.bin3 || !p.schedule);
+    }
+
+    // 2. 検索クエリによる絞り込み（全角半角、ひらがな・カタカナ両対応）
     if (!searchQuery.trim()) {
-      return currentWardPosts;
+      return list;
     }
 
     const normalize = (str: string) =>
@@ -136,7 +160,7 @@ export default function HomePage() {
 
     const q = normalize(searchQuery.trim());
 
-    return currentWardPosts.filter((post) => {
+    return list.filter((post) => {
       const nameNorm = normalize(post.name);
       const addressNorm = post.address ? normalize(post.address) : '';
       const codeNorm = post.code ? post.code.toLowerCase() : '';
@@ -149,7 +173,7 @@ export default function HomePage() {
         numStr === q
       );
     });
-  }, [currentWardPosts, searchQuery]);
+  }, [currentWardPosts, currentShift, searchQuery]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
@@ -162,6 +186,7 @@ export default function HomePage() {
         onSelectWard={(w) => {
           setSelectedWard(w);
           setSearchQuery(''); // 区を切り替えたら検索リセット
+          setCurrentShift('all'); // 便選択もリセット
         }}
         counts={counts}
         onOpenCreateModal={() => setIsCreateModalOpen(true)}
@@ -170,13 +195,27 @@ export default function HomePage() {
 
       {/* メインコンテンツ */}
       <main className="flex-1 max-w-xl w-full mx-auto px-4 py-4 safe-bottom">
+        {/* スケジュール・運行便フィルターバー */}
+        <ScheduleFilterBar
+          ward={selectedWard}
+          currentShift={currentShift}
+          onSelectShift={setCurrentShift}
+          onOpenScheduleModal={() => setIsScheduleModalOpen(true)}
+          onOpenRouteQR={(shiftId) => setActiveRouteShiftId(shiftId)}
+          hasScheduleData={hasScheduleData}
+        />
+
         {/* 検索バー */}
         <div className="mb-4">
           <SearchBar
             query={searchQuery}
             onQueryChange={setSearchQuery}
             resultCount={filteredPosts.length}
-            totalCount={currentWardPosts.length}
+            totalCount={
+              currentShift === 'special'
+                ? currentWardPosts.filter((p) => p.schedule?.weekday?.special).length
+                : currentWardPosts.length
+            }
           />
         </div>
 
@@ -211,7 +250,9 @@ export default function HomePage() {
               一致するポストが見つかりません
             </h2>
             <p className="text-xs text-slate-500">
-              検索ワードを変更するか、クリアボタンを押してください
+              {currentShift === 'special'
+                ? '特便対象（4局）の中で該当するポストが見つかりませんでした'
+                : '検索ワードを変更するか、クリアボタンを押してください'}
             </p>
           </div>
         ) : (
@@ -222,6 +263,7 @@ export default function HomePage() {
                 key={post.id}
                 post={post}
                 customImage={customImages[post.id]}
+                currentShift={currentShift}
                 onOpenQR={(p) => setActiveModalPost(p)}
               />
             ))}
@@ -265,6 +307,27 @@ export default function HomePage() {
         isOpen={isOfflineModalOpen}
         posts={allPosts}
         onClose={() => setIsOfflineModalOpen(false)}
+      />
+
+      {/* 収集時刻表モーダル */}
+      <RouteScheduleModal
+        isOpen={isScheduleModalOpen}
+        ward={selectedWard}
+        posts={allPosts}
+        onClose={() => setIsScheduleModalOpen(false)}
+        onOpenPostQR={(p) => setActiveModalPost(p)}
+        onOpenRouteQR={(shiftId) => {
+          setIsScheduleModalOpen(false);
+          setActiveRouteShiftId(shiftId);
+        }}
+      />
+
+      {/* 便開始QRコードモーダル */}
+      <RouteQRModal
+        isOpen={Boolean(activeRouteShiftId)}
+        ward={selectedWard}
+        initialShiftId={activeRouteShiftId || 'bin2'}
+        onClose={() => setActiveRouteShiftId(null)}
       />
     </div>
   );

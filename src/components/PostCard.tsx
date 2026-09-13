@@ -1,21 +1,28 @@
 'use client';
 
-import { QrCode, ChevronRight, Check } from 'lucide-react';
+import { QrCode, ChevronRight, Clock } from 'lucide-react';
 import { PostItem } from '@/types/post';
 
 interface PostCardProps {
   post: PostItem;
   customImage?: string;
+  currentShift?: 'all' | 'bin2' | 'bin3' | 'special';
   onOpenQR: (post: PostItem) => void;
 }
 
-export default function PostCard({ post, customImage, onOpenQR }: PostCardProps) {
+export default function PostCard({
+  post,
+  customImage,
+  currentShift = 'all',
+  onOpenQR,
+}: PostCardProps) {
   const isCustomized = Boolean(customImage);
+  const weekday = post.schedule?.weekday;
 
   return (
     <div
       onClick={() => onOpenQR(post)}
-      className="group relative flex items-center justify-between p-3.5 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:border-red-300 hover:shadow-md active:scale-[0.985] active:bg-slate-50 transition cursor-pointer"
+      className="group relative flex items-center justify-between p-3.5 bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:border-red-300 hover:shadow-md active:scale-[0.985] active:bg-slate-50 transition cursor-pointer"
     >
       <div className="flex items-center gap-3.5 min-w-0 pr-2">
         {/* 番号バッジ */}
@@ -23,7 +30,7 @@ export default function PostCard({ post, customImage, onOpenQR }: PostCardProps)
           {post.number}
         </div>
 
-        {/* ポスト名 */}
+        {/* ポスト名 & 時刻情報 */}
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <h2 className="text-base font-bold text-slate-800 group-hover:text-postal-red truncate transition-colors leading-snug">
@@ -35,9 +42,56 @@ export default function PostCard({ post, customImage, onOpenQR }: PostCardProps)
               </span>
             )}
           </div>
+
           <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
             {post.code ? `[${post.code}] ` : ''}{post.address ? post.address : `第${post.ward}区 ・ No.${post.number}`}
           </p>
+
+          {/* 運行便・時刻バッジ */}
+          {weekday && (
+            <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+              {currentShift === 'bin2' && weekday.bin2 && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 text-xs font-black font-mono">
+                  <Clock className="w-3 h-3" />
+                  2号便 {weekday.bin2}
+                </span>
+              )}
+
+              {currentShift === 'bin3' && weekday.bin3 && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-black font-mono">
+                  <Clock className="w-3 h-3" />
+                  3号便 {weekday.bin3}
+                </span>
+              )}
+
+              {currentShift === 'special' && weekday.special && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500 text-white text-xs font-black font-mono shadow-xs">
+                  <Clock className="w-3 h-3" />
+                  特便 {weekday.special}
+                </span>
+              )}
+
+              {currentShift === 'all' && (
+                <>
+                  {weekday.bin2 && (
+                    <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-bold font-mono">
+                      2号 {weekday.bin2}
+                    </span>
+                  )}
+                  {weekday.bin3 && (
+                    <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-bold font-mono">
+                      3号 {weekday.bin3}
+                    </span>
+                  )}
+                  {weekday.special && (
+                    <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px] font-black font-mono">
+                      特便 {weekday.special}
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
