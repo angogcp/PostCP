@@ -21,7 +21,7 @@ export const WARD_ROUTES: Record<number, WardRoutes> = {
   3: {
     ward: 3,
     wardName: '3区',
-    defaultWardQrData: 'DIV:01',
+    defaultWardQrData: 'DIV:03',
     bannerImage: '/images/routes/weekday_all_3ku.jpg',
     weekday: [
       {
@@ -31,8 +31,8 @@ export const WARD_ROUTES: Record<number, WardRoutes> = {
         description: '午前収集（全28箇所）',
         qrImage: '/images/routes/weekday_bin2_3ku.jpg',
         badgeColor: 'bg-blue-600 text-white',
-        binQrData: 'BIN:01',
-        wardQrData: 'DIV:01',
+        binQrData: 'BIN:02',
+        wardQrData: 'DIV:03',
       },
       {
         id: 'bin3',
@@ -41,8 +41,8 @@ export const WARD_ROUTES: Record<number, WardRoutes> = {
         description: '午後収集（全28箇所）',
         qrImage: '/images/routes/weekday_bin3_3ku.jpg',
         badgeColor: 'bg-emerald-600 text-white',
-        binQrData: 'BIN:01',
-        wardQrData: 'DIV:01',
+        binQrData: 'BIN:03',
+        wardQrData: 'DIV:03',
       },
       {
         id: 'special',
@@ -51,8 +51,8 @@ export const WARD_ROUTES: Record<number, WardRoutes> = {
         description: '夕方主要局収集（4箇所のみ）',
         qrImage: '/images/routes/weekday_special_3ku.jpg',
         badgeColor: 'bg-amber-600 text-white',
-        binQrData: 'BIN:01',
-        wardQrData: 'DIV:01',
+        binQrData: 'BIN:04',
+        wardQrData: 'DIV:03',
       },
     ],
   },

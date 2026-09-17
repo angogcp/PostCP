@@ -53,7 +53,9 @@ export default function RouteQRModal({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem('postcp_route_qrs');
+        // 旧バージョンの誤ったキャッシュ(BIN:01等)をクリア
+        localStorage.removeItem('postcp_route_qrs');
+        const saved = localStorage.getItem('postcp_route_qrs_v2');
         if (saved) {
           setCustomQrStrings(JSON.parse(saved));
         }
@@ -121,7 +123,7 @@ export default function RouteQRModal({
       },
     };
     setCustomQrStrings(next);
-    localStorage.setItem('postcp_route_qrs', JSON.stringify(next));
+    localStorage.setItem('postcp_route_qrs_v2', JSON.stringify(next));
     setIsEditingData(false);
     setSaveToast(true);
     setTimeout(() => setSaveToast(false), 2500);
@@ -132,7 +134,7 @@ export default function RouteQRModal({
     const next = { ...customQrStrings };
     delete next[currentShift.id];
     setCustomQrStrings(next);
-    localStorage.setItem('postcp_route_qrs', JSON.stringify(next));
+    localStorage.setItem('postcp_route_qrs_v2', JSON.stringify(next));
     setEditBinStr(currentShift.binQrData);
     setEditWardStr(currentShift.wardQrData);
     setIsEditingData(false);

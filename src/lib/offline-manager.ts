@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { PostItem } from '@/types/post';
 
-const CACHE_NAME = 'postcp-cache-v4';
+const CACHE_NAME = 'postcp-cache-v5';
 
 export function registerServiceWorker() {
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
