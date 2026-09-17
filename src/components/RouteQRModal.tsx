@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { RouteShift, WARD_ROUTES } from '@/data/routes';
 
+import Encoding from 'encoding-japanese';
+
 interface RouteQRModalProps {
   isOpen: boolean;
   ward: number;
@@ -53,9 +55,10 @@ export default function RouteQRModal({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        // 旧バージョンの誤ったキャッシュ(BIN:01等)をクリア
+        // 旧バージョンの誤ったキャッシュをクリア
         localStorage.removeItem('postcp_route_qrs');
-        const saved = localStorage.getItem('postcp_route_qrs_v2');
+        localStorage.removeItem('postcp_route_qrs_v2');
+        const saved = localStorage.getItem('postcp_route_qrs_v3');
         if (saved) {
           setCustomQrStrings(JSON.parse(saved));
         }
@@ -67,9 +70,9 @@ export default function RouteQRModal({
 
   // 現在の便・区のQR文字列
   const currentBinData =
-    customQrStrings[currentShift?.id]?.bin || currentShift?.binQrData || '2号便';
+    customQrStrings[currentShift?.id]?.bin || currentShift?.binQrData || 'BIN:01;D01:01;S01:01;B01:02;N01:平日取集２号便;';
   const currentWardData =
-    customQrStrings[currentShift?.id]?.ward || currentShift?.wardQrData || '3区';
+    customQrStrings[currentShift?.id]?.ward || currentShift?.wardQrData || 'DIV:01;C01:003;N01:3区;';
 
   // 編集フィールドの同期
   useEffect(() => {
@@ -78,13 +81,26 @@ export default function RouteQRModal({
     setZoomTarget(null);
   }, [selectedShiftId, currentBinData, currentWardData]);
 
-  // QRコードSVGの生成
+  // QRコードSVGの生成（日本の郵便端末標準であるShift-JISバイナリでエンコード）
   useEffect(() => {
     if (!currentShift) return;
 
+    // Shift-JISバイナリ変換ヘルパー
+    const toSjisSegments = (text: string) => {
+      try {
+        const sjisArray = Encoding.convert(Encoding.stringToCode(text), {
+          to: 'SJIS',
+          from: 'UNICODE',
+        });
+        return [{ data: new Uint8Array(sjisArray), mode: 'byte' as const }];
+      } catch (e) {
+        return text;
+      }
+    };
+
     // 便名QR
     QRCode.toString(
-      currentBinData,
+      toSjisSegments(currentBinData) as any,
       {
         type: 'svg',
         margin: 2,
@@ -98,7 +114,7 @@ export default function RouteQRModal({
 
     // 区名QR
     QRCode.toString(
-      currentWardData,
+      toSjisSegments(currentWardData) as any,
       {
         type: 'svg',
         margin: 2,
@@ -123,7 +139,7 @@ export default function RouteQRModal({
       },
     };
     setCustomQrStrings(next);
-    localStorage.setItem('postcp_route_qrs_v2', JSON.stringify(next));
+    localStorage.setItem('postcp_route_qrs_v3', JSON.stringify(next));
     setIsEditingData(false);
     setSaveToast(true);
     setTimeout(() => setSaveToast(false), 2500);
@@ -134,7 +150,7 @@ export default function RouteQRModal({
     const next = { ...customQrStrings };
     delete next[currentShift.id];
     setCustomQrStrings(next);
-    localStorage.setItem('postcp_route_qrs_v2', JSON.stringify(next));
+    localStorage.setItem('postcp_route_qrs_v3', JSON.stringify(next));
     setEditBinStr(currentShift.binQrData);
     setEditWardStr(currentShift.wardQrData);
     setIsEditingData(false);
@@ -305,8 +321,8 @@ export default function RouteQRModal({
                       dangerouslySetInnerHTML={{ __html: binSvg }}
                     />
 
-                    <div className="mt-2.5 text-[11px] text-slate-500 font-mono font-medium truncate max-w-full">
-                      コード: <span className="font-bold text-slate-800">{currentBinData}</span>
+                    <div className="mt-2 text-[10px] text-slate-500 font-mono font-medium break-all max-w-full leading-tight">
+                      コード: <span className="font-bold text-slate-800 select-all">{currentBinData}</span>
                     </div>
                   </div>
 
@@ -338,8 +354,8 @@ export default function RouteQRModal({
                       dangerouslySetInnerHTML={{ __html: wardSvg }}
                     />
 
-                    <div className="mt-2.5 text-[11px] text-slate-500 font-mono font-medium truncate max-w-full">
-                      コード: <span className="font-bold text-slate-800">{currentWardData}</span>
+                    <div className="mt-2 text-[10px] text-slate-500 font-mono font-medium break-all max-w-full leading-tight">
+                      コード: <span className="font-bold text-slate-800 select-all">{currentWardData}</span>
                     </div>
                   </div>
                 </div>
