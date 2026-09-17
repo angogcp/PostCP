@@ -1,5 +1,5 @@
 // PostCP Service Worker - オフライン対応キャッシュ
-const CACHE_NAME = 'postcp-cache-v3';
+const CACHE_NAME = 'postcp-cache-v4';
 
 // 必須キャッシュリスト
 const STATIC_ASSETS = [
