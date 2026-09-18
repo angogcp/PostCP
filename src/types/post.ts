@@ -6,9 +6,7 @@ export interface PostScheduleTimes {
 
 export interface PostSchedule {
   weekday?: PostScheduleTimes;
-  holiday?: {
-    [key: string]: string;
-  };
+  holiday?: PostScheduleTimes;
 }
 
 export interface PostItem {

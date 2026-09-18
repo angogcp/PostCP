@@ -7,6 +7,7 @@ interface PostCardProps {
   post: PostItem;
   customImage?: string;
   currentShift?: 'all' | 'bin2' | 'bin3' | 'special';
+  dayType?: 'weekday' | 'holiday';
   onOpenQR: (post: PostItem) => void;
 }
 
@@ -14,10 +15,12 @@ export default function PostCard({
   post,
   customImage,
   currentShift = 'all',
+  dayType = 'weekday',
   onOpenQR,
 }: PostCardProps) {
   const isCustomized = Boolean(customImage);
-  const weekday = post.schedule?.weekday;
+  const isHoliday = dayType === 'holiday';
+  const scheduleTimes = isHoliday ? post.schedule?.holiday : post.schedule?.weekday;
 
   return (
     <div
@@ -41,6 +44,11 @@ export default function PostCard({
                 差替済
               </span>
             )}
+            {isHoliday && (
+              <span className="flex-shrink-0 text-[9px] bg-red-50 text-postal-red border border-red-200 px-1.5 py-0.2 rounded font-bold">
+                土日祝
+              </span>
+            )}
           </div>
 
           <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
@@ -48,44 +56,44 @@ export default function PostCard({
           </p>
 
           {/* 運行便・時刻バッジ */}
-          {weekday && (
+          {scheduleTimes && (
             <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-              {currentShift === 'bin2' && weekday.bin2 && (
+              {currentShift === 'bin2' && scheduleTimes.bin2 && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 text-xs font-black font-mono">
                   <Clock className="w-3 h-3" />
-                  2号便 {weekday.bin2}
+                  2号便 {scheduleTimes.bin2}
                 </span>
               )}
 
-              {currentShift === 'bin3' && weekday.bin3 && (
+              {currentShift === 'bin3' && scheduleTimes.bin3 && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-black font-mono">
                   <Clock className="w-3 h-3" />
-                  3号便 {weekday.bin3}
+                  3号便 {scheduleTimes.bin3}
                 </span>
               )}
 
-              {currentShift === 'special' && weekday.special && (
+              {!isHoliday && currentShift === 'special' && scheduleTimes.special && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500 text-white text-xs font-black font-mono shadow-xs">
                   <Clock className="w-3 h-3" />
-                  特便 {weekday.special}
+                  特便 {scheduleTimes.special}
                 </span>
               )}
 
               {currentShift === 'all' && (
                 <>
-                  {weekday.bin2 && (
+                  {scheduleTimes.bin2 && (
                     <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-bold font-mono">
-                      2号 {weekday.bin2}
+                      2号 {scheduleTimes.bin2}
                     </span>
                   )}
-                  {weekday.bin3 && (
+                  {scheduleTimes.bin3 && (
                     <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[10px] font-bold font-mono">
-                      3号 {weekday.bin3}
+                      3号 {scheduleTimes.bin3}
                     </span>
                   )}
-                  {weekday.special && (
+                  {!isHoliday && scheduleTimes.special && (
                     <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px] font-black font-mono">
-                      特便 {weekday.special}
+                      特便 {scheduleTimes.special}
                     </span>
                   )}
                 </>

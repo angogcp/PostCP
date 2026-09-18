@@ -77,7 +77,23 @@ wards.forEach((ward) => {
     // 既存のJSONからcode, address, qrContent, scheduleを引き継ぐ
     const existingPost = existingPostsMap.get(`${ward.id}-${number}`);
 
-    // 平日第3区のデフォルト収集時刻（パナソニック電工私設除外済）
+    // 特別メタデータ定義 (29, 30番等の新規・補正)
+    const customMetadata = {
+      '3-29': {
+        name: '守口市役所横',
+        code: '570430',
+        address: '守口市 京阪本通 2-5-5',
+        qrContent: 'PST:01;CD1:570430;',
+      },
+      '3-30': {
+        name: 'ローソン守口駅前店',
+        code: '570712',
+        address: '守口市 寺内町 2-1-6',
+        qrContent: 'PST:01;CD1:570712;\r\n',
+      },
+    };
+
+    // 平日第3区の収集時刻（全28箇所）
     const timetable3 = {
       1: { bin2: '10:10', bin3: '14:10' },
       2: { bin2: '10:13', bin3: '14:13' },
@@ -109,16 +125,59 @@ wards.forEach((ward) => {
       28: { bin2: '12:06', bin3: '16:06' }
     };
 
-    const schedule = existingPost?.schedule || (ward.id === 3 && timetable3[number] ? { weekday: timetable3[number] } : undefined);
+    // 土日祝第3区の収集時刻（全30箇所、2便制：2号便10:00〜、3号便15:00〜、特便なし）
+    const timetableHoliday3 = {
+      1: { bin2: '10:00', bin3: '15:00' },
+      2: { bin2: '10:03', bin3: '15:03' },
+      3: { bin2: '10:06', bin3: '15:06' },
+      4: { bin2: '10:09', bin3: '15:09' },
+      5: { bin2: '10:12', bin3: '15:12' },
+      6: { bin2: '10:15', bin3: '15:15' },
+      7: { bin2: '10:23', bin3: '15:23' },
+      8: { bin2: '10:26', bin3: '15:26' },
+      9: { bin2: '10:29', bin3: '15:29' },
+      10: { bin2: '10:32', bin3: '15:32' },
+      11: { bin2: '10:35', bin3: '15:35' },
+      12: { bin2: '10:38', bin3: '15:38' },
+      13: { bin2: '10:46', bin3: '15:46' },
+      14: { bin2: '10:49', bin3: '15:49' },
+      15: { bin2: '10:52', bin3: '15:52' },
+      16: { bin2: '10:55', bin3: '15:55' },
+      17: { bin2: '10:58', bin3: '15:58' },
+      18: { bin2: '11:01', bin3: '16:01' },
+      19: { bin2: '11:04', bin3: '16:04' },
+      20: { bin2: '11:07', bin3: '16:07' },
+      21: { bin2: '11:15', bin3: '16:15' },
+      22: { bin2: '11:23', bin3: '16:23' },
+      23: { bin2: '11:26', bin3: '16:26' },
+      24: { bin2: '11:34', bin3: '16:34' },
+      25: { bin2: '11:47', bin3: '16:47' },
+      26: { bin2: '11:50', bin3: '16:50' },
+      27: { bin2: '11:53', bin3: '16:53' },
+      28: { bin2: '11:56', bin3: '16:56' },
+      29: { bin2: '12:01', bin3: '17:01' },
+      30: { bin2: '12:05', bin3: '17:05' }
+    };
+
+    const postKey = `${ward.id}-${number}`;
+    const extraMeta = customMetadata[postKey] || {};
+
+    let schedule = existingPost?.schedule;
+    if (ward.id === 3) {
+      schedule = {
+        weekday: timetable3[number],
+        holiday: timetableHoliday3[number],
+      };
+    }
 
     wardPostsMap.set(number, {
-      id: `${ward.id}-${number}`,
+      id: postKey,
       ward: ward.id,
       number: number,
-      name: existingPost?.name || name,
-      code: existingPost?.code,
-      address: existingPost?.address,
-      qrContent: existingPost?.qrContent,
+      name: extraMeta.name || existingPost?.name || name,
+      code: extraMeta.code || existingPost?.code,
+      address: extraMeta.address || existingPost?.address,
+      qrContent: extraMeta.qrContent || existingPost?.qrContent,
       originalFilename: file,
       imagePath: `/qr/${ward.id}/${safeFilename}`,
       schedule: schedule,

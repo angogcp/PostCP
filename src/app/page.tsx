@@ -34,6 +34,7 @@ export default function HomePage() {
   const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [activeRouteShiftId, setActiveRouteShiftId] = useState<string | null>(null);
+  const [dayType, setDayType] = useState<'weekday' | 'holiday'>('weekday');
 
   // 初回マウント：SW登録、カスタム画像と新規登録ポストの取得
   useEffect(() => {
@@ -120,29 +121,49 @@ export default function HomePage() {
   }, [allPosts]);
 
   // 選択中の区のポスト一覧（番号順）
+  // 平日ダイヤの場合はweekdayスケジュールがあるもの（またはスケジュール未定義のもの）、
+  // 土日祝ダイヤの場合は全件（29, 30含む）
   const currentWardPosts = useMemo(() => {
     return allPosts
       .filter((p) => p.ward === selectedWard)
+      .filter((p) => {
+        if (dayType === 'holiday') {
+          return Boolean(p.schedule?.holiday) || !p.schedule;
+        }
+        return Boolean(p.schedule?.weekday) || !p.schedule;
+      })
       .sort((a, b) => a.number - b.number);
-  }, [allPosts, selectedWard]);
+  }, [allPosts, selectedWard, dayType]);
 
   // スケジュールデータがあるか
   const hasScheduleData = useMemo(() => {
-    return currentWardPosts.some((p) => p.schedule?.weekday);
-  }, [currentWardPosts]);
+    return allPosts.some((p) => p.ward === selectedWard && (p.schedule?.weekday || p.schedule?.holiday));
+  }, [allPosts, selectedWard]);
 
   // 便（Shift）および検索クエリによる絞り込み
   const filteredPosts = useMemo(() => {
     // 1. 便による絞り込み
     let list = currentWardPosts;
+    const isHoliday = dayType === 'holiday';
+
     if (currentShift === 'special') {
-      list = list.filter((p) => p.schedule?.weekday?.special);
+      if (isHoliday) {
+        list = []; // 土日祝は特便なし
+      } else {
+        list = list.filter((p) => p.schedule?.weekday?.special);
+      }
     } else if (currentShift === 'bin2') {
-      // 2号便（全件存在する場合は2号便時刻があるもの）
-      list = list.filter((p) => p.schedule?.weekday?.bin2 || !p.schedule);
+      // 2号便
+      list = list.filter((p) => {
+        if (isHoliday) return p.schedule?.holiday?.bin2 || !p.schedule;
+        return p.schedule?.weekday?.bin2 || !p.schedule;
+      });
     } else if (currentShift === 'bin3') {
-      // 3号便（3号便時刻があるもの）
-      list = list.filter((p) => p.schedule?.weekday?.bin3 || !p.schedule);
+      // 3号便
+      list = list.filter((p) => {
+        if (isHoliday) return p.schedule?.holiday?.bin3 || !p.schedule;
+        return p.schedule?.weekday?.bin3 || !p.schedule;
+      });
     }
 
     // 2. 検索クエリによる絞り込み（全角半角、ひらがな・カタカナ両対応）
@@ -173,7 +194,7 @@ export default function HomePage() {
         numStr === q
       );
     });
-  }, [currentWardPosts, currentShift, searchQuery]);
+  }, [currentWardPosts, currentShift, searchQuery, dayType]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
@@ -198,6 +219,13 @@ export default function HomePage() {
         {/* スケジュール・運行便フィルターバー */}
         <ScheduleFilterBar
           ward={selectedWard}
+          dayType={dayType}
+          onSelectDayType={(d) => {
+            setDayType(d);
+            if (d === 'holiday' && currentShift === 'special') {
+              setCurrentShift('all');
+            }
+          }}
           currentShift={currentShift}
           onSelectShift={setCurrentShift}
           onOpenScheduleModal={() => setIsScheduleModalOpen(true)}
@@ -264,6 +292,7 @@ export default function HomePage() {
                 post={post}
                 customImage={customImages[post.id]}
                 currentShift={currentShift}
+                dayType={dayType}
                 onOpenQR={(p) => setActiveModalPost(p)}
               />
             ))}
@@ -314,9 +343,11 @@ export default function HomePage() {
         isOpen={isScheduleModalOpen}
         ward={selectedWard}
         posts={allPosts}
+        initialDayType={dayType}
         onClose={() => setIsScheduleModalOpen(false)}
         onOpenPostQR={(p) => setActiveModalPost(p)}
-        onOpenRouteQR={(shiftId) => {
+        onOpenRouteQR={(shiftId, day) => {
+          if (day) setDayType(day);
           setIsScheduleModalOpen(false);
           setActiveRouteShiftId(shiftId);
         }}
@@ -327,6 +358,7 @@ export default function HomePage() {
         isOpen={Boolean(activeRouteShiftId)}
         ward={selectedWard}
         initialShiftId={activeRouteShiftId || 'bin2'}
+        initialDayType={dayType}
         onClose={() => setActiveRouteShiftId(null)}
       />
     </div>

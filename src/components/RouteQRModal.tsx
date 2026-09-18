@@ -22,6 +22,7 @@ interface RouteQRModalProps {
   isOpen: boolean;
   ward: number;
   initialShiftId?: string;
+  initialDayType?: 'weekday' | 'holiday';
   onClose: () => void;
 }
 
@@ -29,13 +30,39 @@ export default function RouteQRModal({
   isOpen,
   ward,
   initialShiftId = 'bin2',
+  initialDayType = 'weekday',
   onClose,
 }: RouteQRModalProps) {
   const routesData = WARD_ROUTES[ward];
-  const shifts = routesData?.weekday || [];
+  const [dayType, setDayType] = useState<'weekday' | 'holiday'>(initialDayType);
+  const isHoliday = dayType === 'holiday';
+
+  const shifts = isHoliday
+    ? routesData?.holiday || []
+    : routesData?.weekday || [];
+
   const [selectedShiftId, setSelectedShiftId] = useState<string>(initialShiftId);
   const [viewMode, setViewMode] = useState<'digital' | 'photo'>('digital');
   const [zoomTarget, setZoomTarget] = useState<'bin' | 'ward' | null>(null);
+
+  // 初期値の同期
+  useEffect(() => {
+    if (isOpen) {
+      setDayType(initialDayType);
+      if (initialDayType === 'holiday' && initialShiftId === 'special') {
+        setSelectedShiftId('bin2');
+      } else {
+        setSelectedShiftId(initialShiftId);
+      }
+    }
+  }, [isOpen, initialDayType, initialShiftId]);
+
+  // 土日祝に特便が選ばれていたら2号便に戻す
+  useEffect(() => {
+    if (isHoliday && selectedShiftId === 'special') {
+      setSelectedShiftId('bin2');
+    }
+  }, [isHoliday, selectedShiftId]);
 
   // カスタムQR文字列（LocalStorageで保存・編集可能）
   const [customQrStrings, setCustomQrStrings] = useState<Record<string, { bin: string; ward: string }>>({});
@@ -55,10 +82,9 @@ export default function RouteQRModal({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        // 旧バージョンの誤ったキャッシュをクリア
         localStorage.removeItem('postcp_route_qrs');
         localStorage.removeItem('postcp_route_qrs_v2');
-        const saved = localStorage.getItem('postcp_route_qrs_v3');
+        const saved = localStorage.getItem('postcp_route_qrs_v4');
         if (saved) {
           setCustomQrStrings(JSON.parse(saved));
         }
@@ -68,18 +94,20 @@ export default function RouteQRModal({
     }
   }, []);
 
+  const qrStorageKey = `${dayType}_${currentShift?.id}`;
+
   // 現在の便・区のQR文字列
   const currentBinData =
-    customQrStrings[currentShift?.id]?.bin || currentShift?.binQrData || 'BIN:01;D01:01;S01:01;B01:02;N01:平日取集２号便;';
+    customQrStrings[qrStorageKey]?.bin || currentShift?.binQrData || (isHoliday ? 'BIN:01;D01:03;S01:01;B01:02;N01:休日取集２号便;' : 'BIN:01;D01:01;S01:01;B01:02;N01:平日取集２号便;');
   const currentWardData =
-    customQrStrings[currentShift?.id]?.ward || currentShift?.wardQrData || 'DIV:01;C01:003;N01:3区;';
+    customQrStrings[qrStorageKey]?.ward || currentShift?.wardQrData || 'DIV:01;C01:003;N01:3区;';
 
   // 編集フィールドの同期
   useEffect(() => {
     setEditBinStr(currentBinData);
     setEditWardStr(currentWardData);
     setZoomTarget(null);
-  }, [selectedShiftId, currentBinData, currentWardData]);
+  }, [selectedShiftId, dayType, currentBinData, currentWardData]);
 
   // QRコードSVGの生成（日本の郵便端末標準であるShift-JISバイナリでエンコード）
   useEffect(() => {
@@ -133,13 +161,13 @@ export default function RouteQRModal({
   const handleSaveQrData = () => {
     const next = {
       ...customQrStrings,
-      [currentShift.id]: {
+      [qrStorageKey]: {
         bin: editBinStr.trim() || currentShift.binQrData,
         ward: editWardStr.trim() || currentShift.wardQrData,
       },
     };
     setCustomQrStrings(next);
-    localStorage.setItem('postcp_route_qrs_v3', JSON.stringify(next));
+    localStorage.setItem('postcp_route_qrs_v4', JSON.stringify(next));
     setIsEditingData(false);
     setSaveToast(true);
     setTimeout(() => setSaveToast(false), 2500);
@@ -148,9 +176,9 @@ export default function RouteQRModal({
   // デフォルトに戻す
   const handleResetQrData = () => {
     const next = { ...customQrStrings };
-    delete next[currentShift.id];
+    delete next[qrStorageKey];
     setCustomQrStrings(next);
-    localStorage.setItem('postcp_route_qrs_v3', JSON.stringify(next));
+    localStorage.setItem('postcp_route_qrs_v4', JSON.stringify(next));
     setEditBinStr(currentShift.binQrData);
     setEditWardStr(currentShift.wardQrData);
     setIsEditingData(false);
@@ -184,9 +212,6 @@ export default function RouteQRModal({
             <div>
               <h3 className="text-sm sm:text-base font-black text-slate-800 flex items-center gap-2">
                 運行便 開始QRコード（第{ward}区）
-                <span className="hidden sm:inline-flex text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.2 rounded-full font-bold">
-                  高精細デジタル再生成
-                </span>
               </h3>
               <p className="text-[11px] text-slate-500">
                 ①便名 → ②区名の順に端末リーダーでスキャン
@@ -201,9 +226,38 @@ export default function RouteQRModal({
           </button>
         </div>
 
+        {/* ダイヤ種別切り替えタブ（平日 / 土日祝） */}
+        <div className="px-4 pt-2.5 pb-1 bg-white border-b border-slate-100 flex items-center justify-between">
+          <div className="inline-flex p-0.5 rounded-xl bg-slate-100 border border-slate-200/80 w-full sm:w-auto">
+            <button
+              onClick={() => setDayType('weekday')}
+              className={`flex-1 sm:flex-initial px-3.5 py-1 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                !isHoliday
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>平日ダイヤ (2号・3号・特便)</span>
+            </button>
+            <button
+              onClick={() => {
+                setDayType('holiday');
+                if (selectedShiftId === 'special') setSelectedShiftId('bin2');
+              }}
+              className={`flex-1 sm:flex-initial px-3.5 py-1 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                isHoliday
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>土日祝ダイヤ (2号・3号のみ)</span>
+            </button>
+          </div>
+        </div>
+
         {/* 便切り替えタブ */}
         <div className="p-2.5 bg-slate-100/80 border-b border-slate-200/60">
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className={`grid ${isHoliday ? 'grid-cols-2' : 'grid-cols-3'} gap-1.5`}>
             {shifts.map((shift) => {
               const isSelected = shift.id === currentShift.id;
               return (

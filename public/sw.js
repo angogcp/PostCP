@@ -1,5 +1,5 @@
 // PostCP Service Worker - オフライン対応キャッシュ
-const CACHE_NAME = 'postcp-cache-v6';
+const CACHE_NAME = 'postcp-cache-v7';
 
 // 必須キャッシュリスト
 const STATIC_ASSETS = [
@@ -11,6 +11,11 @@ const STATIC_ASSETS = [
   '/images/routes/weekday_bin3_3ku.jpg',
   '/images/routes/weekday_special_3ku.jpg',
   '/images/routes/weekday_all_3ku.jpg',
+  '/images/routes/holiday_bin2_3ku.jpg',
+  '/images/routes/holiday_bin3_3ku.jpg',
+  '/images/routes/holiday_all_3ku.jpg',
+  '/qr/3/qr-3-29.jpg',
+  '/qr/3/qr-3-30.jpg',
 ];
 
 // インストール時

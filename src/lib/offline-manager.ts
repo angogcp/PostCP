@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { PostItem } from '@/types/post';
 
-const CACHE_NAME = 'postcp-cache-v6';
+const CACHE_NAME = 'postcp-cache-v7';
 
 export function registerServiceWorker() {
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
@@ -36,6 +36,9 @@ export async function precacheAllImages(
     '/images/routes/weekday_bin3_3ku.jpg',
     '/images/routes/weekday_special_3ku.jpg',
     '/images/routes/weekday_all_3ku.jpg',
+    '/images/routes/holiday_bin2_3ku.jpg',
+    '/images/routes/holiday_bin3_3ku.jpg',
+    '/images/routes/holiday_all_3ku.jpg',
   ];
 
   const urlsToCache = [
